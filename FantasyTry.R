@@ -11,18 +11,31 @@ result <- GET(url = url)
 raw.content <- rawToChar(result$content)
 JSON.content <- fromJSON(this.raw.content)
 
+scoreBoard = data.frame(matrix(ncol=5, nrow=0))
+names <- c("Home", "Away", "HomeScore", "AwayScore", "Week")
+colnames(scoreBoard) <- names
 
-awayScores = unlist(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups[1][[1]]["awayTeamScores"]$awayTeamScores)
-awayTeamName = paste(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups[1][[1]]$awayTeam$teamLocation, 
-                     JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups[1][[1]]$awayTeam$teamNickname)
-homeScores = unlist(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups[1][[1]]["homeTeamScores"]$homeTeamScores)
-homeTeamName = paste(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups[1][[1]]$homeTeam$teamLocation, 
-                     JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups[1][[1]]$homeTeam$teamNickname)
-scoreBoards = data.frame("Home" = homeTeamName, "Away" = awayTeamName, "HomeScore" = homeScores,
-                         "AwayScore" = awayScores, "Week" = 1)
-
-
+addFrame <- function(week) {
+  # Get away score
+  awayScores = lapply(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups, "[", 2)
+  
+  # Get away name
+  nameExtract = (lapply(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups,"[[",3))
+  awayTeamName = paste(unlist(lapply(nameExtract, "[", 6)), 
+                       unlist(lapply(nameExtract, "[", 4)))
+  
+  # Get home score
+  homeScores = lapply(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups,"[","homeTeamScores")
+  
+  # Get home name PROBLEM EXTRACTING HOMETEAMNAME
+  nameExtract = (lapply(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups,"[[",12))
+  homeTeamName = paste(unlist(lapply(nameExtract, "[", 6)), 
+                       unlist(lapply(nameExtract, "[", 4)))
+  
+  
+  scoreBoard = data.frame("Home" = homeTeamName, "Away" = awayTeamName, "HomeScore" = unlist(homeScores),
+                           "AwayScore" = unlist(awayScores))
+}
 
 # flat.content <- flatten(this.content)
 
-str(this.content)
