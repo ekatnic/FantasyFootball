@@ -15,9 +15,9 @@ scoreBoard = data.frame(matrix(ncol=5, nrow=0))
 names <- c("Home", "Away", "HomeScore", "AwayScore", "Week")
 colnames(scoreBoard) <- names
 
-addFrame <- function(week) {
+
   # Get away score
-  awayScores = lapply(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups, "[", 2)
+  awayScores = unlist(lapply(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups, "[", 2))
   
   # Get away name
   nameExtract = (lapply(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups,"[[",3))
@@ -25,17 +25,20 @@ addFrame <- function(week) {
                        unlist(lapply(nameExtract, "[", 4)))
   
   # Get home score
-  homeScores = lapply(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups,"[","homeTeamScores")
+  homeScores = unlist(lapply(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups,"[","homeTeamScores"))
   
-  # Get home name PROBLEM EXTRACTING HOMETEAMNAME
-  nameExtract = (lapply(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups,"[[",12))
+  # Get home name 
+  nameExtract = (lapply(JSON.content$leaguesettings$teams$`1`$scheduleItems$matchups,"[[","homeTeam"))
   homeTeamName = paste(unlist(lapply(nameExtract, "[", 6)), 
                        unlist(lapply(nameExtract, "[", 4)))
+
   
   
-  scoreBoard = data.frame("Home" = homeTeamName, "Away" = awayTeamName, "HomeScore" = unlist(homeScores),
-                           "AwayScore" = unlist(awayScores))
-}
+  scoreBoard <- rbind(data.frame("Home" = homeTeamName, "Away" = awayTeamName, "HomeScore" = unlist(homeScores),
+                           "AwayScore" = unlist(awayScores)))
+  
+
+
 
 # flat.content <- flatten(this.content)
 
