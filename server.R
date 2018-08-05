@@ -5,7 +5,7 @@ library(tidyverse)
 library(DT)
 library(magrittr)
 
-projectionTable <- read.csv("~/Desktop/FantasyProject/ProjectionTable.csv", stringsAsFactors = FALSE)
+projectionTable <- read.csv("Data/ProjectionTable.csv", stringsAsFactors = FALSE)
 
 server <- function(input,output){
   

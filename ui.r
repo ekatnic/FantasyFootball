@@ -1,5 +1,5 @@
 library(shiny)
-source("~/Desktop/FantasyProject/server.R")
+source("server.R")
 library("markdown")
 
 ui<- fluidPage(
