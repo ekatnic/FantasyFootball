@@ -3,7 +3,7 @@ source("server.R")
 library("markdown")
 library(shinythemes)
 
-ui<- shinyUI(fluidPage(theme = shinytheme("superhero"),
+ui<- shinyUI(fluidPage(theme = shinytheme("slate"),
                   titlePanel("Players:"),
                   fluidRow(column(3,
                                   selectizeInput(inputId = "QB",
@@ -28,7 +28,7 @@ ui<- shinyUI(fluidPage(theme = shinytheme("superhero"),
                                                  choices = (projectionTable %>% filter(Position %in% c("RB","WR","TE")))$Player
                                   )
                                 )
-                      , column(3, offset = 2,
+                      , column(3, offset = .5,
                             selectizeInput(inputId = "WR1",
                                               label = "Wide Receiver 1", 
                                               choices = (projectionTable %>% filter(Position == "WR"))$Player
@@ -50,9 +50,37 @@ ui<- shinyUI(fluidPage(theme = shinytheme("superhero"),
                                            choices = (projectionTable %>% filter(Position == "K"))$Player
                             )
                       )
+                      , column(3, offset = 1.75,
+                               selectizeInput(inputId = "B1",
+                                              label = "Bench", 
+                                              choices = projectionTable$Player
+                               ),
+                               selectizeInput(inputId = "B2",
+                                              label = "Bench", 
+                                              choices = projectionTable$Player
+                               ),
+                               selectizeInput(inputId = "B3",
+                                              label = "Bench", 
+                                              choices = projectionTable$Player
+                               ),
+                               selectizeInput(inputId = "B4",
+                                              label = "Bench", 
+                                              choices = projectionTable$Player
+                               ),
+                               selectizeInput(inputId = "B5",
+                                              label = "Bench", 
+                                              choices = projectionTable$Player
+                               )
+                      )
                   ),
-                  fluidRow( 
-                    dataTableOutput(outputId = "table")
+                  fluidRow( numericInput(inputId = "Week",
+                                         label = h3("Choose Week"),
+                                         min = 1,
+                                         max = 16,
+                                         value = 1
+                            )
+                    ,
+                    column(4, width=7,dataTableOutput(outputId = "table"))
                   )
               )
         )
